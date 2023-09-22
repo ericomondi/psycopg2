@@ -34,7 +34,7 @@ def get_data(table_name):
 sales = get_data("sales")
 prods = get_data("products")
 
-# # here we loop throgh the records 'list' to print each record
+# # here we loop throgh the prods 'list' to print each record
 for product in prods:
     print(product)
 
