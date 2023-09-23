@@ -11,8 +11,8 @@ def insert_data(conn,table_name, values, columns):
         col_str = ", ".join(columns) #.join is used to concantenate the columns into commma separated strings
         #  a comprehension is used below to create a list
         #  '%s' is a placeholder used in parametized queries
-        val_str = ", ".join(["%s" for column in columns]) #concatinate the placeholders into a comma separated str
-        insert_query = f"INSERT INTO {table_name} ({col_str}) VALUES ({val_str}) "
+        plc_holders = ", ".join(["%s" for column in columns]) #concatinate the placeholders into a comma separated str
+        insert_query = f"INSERT INTO {table_name} ({col_str}) VALUES ({plc_holders}) "
 
         # we then  execute the insert statment
         cursor.execute(insert_query,values)
