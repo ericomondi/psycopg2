@@ -32,4 +32,3 @@ for product in prods:
 
 conn.close()
 
-
