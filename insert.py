@@ -1,4 +1,4 @@
-from dbservice import  *
+import psycopg2
 # we pass the connection as an argument to to deal with any issue
 # of how the database connection is being handled
 def insert_data(conn,table_name, values, columns):
@@ -40,7 +40,7 @@ conn = psycopg2.connect(
 # a tuple of values and a tuple of columns names
 # example
 
-new_sale = (35, 3, 'now()')
+new_sale = (3, 5, 'now()')
 columns = ('product_id','quantity','created_at')
 insert_data (conn, 'sales' , new_sale, columns)
 
