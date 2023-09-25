@@ -24,7 +24,7 @@ def get_data(table_name):
         return records
 
 sales = get_data("sales")
-prods = get_data("products")
+# prods = get_data("products")
 
 # # here we loop throgh the prods 'list' to print each record
 for product in prods:

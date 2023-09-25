@@ -40,13 +40,13 @@ conn = psycopg2.connect(
 # a tuple of values and a tuple of columns names
 # example
 
-new_sale = (3, 5, 'now()')
+new_sale = (2, 10, 'now()')
 columns = ('product_id','quantity','created_at')
 insert_data (conn, 'sales' , new_sale, columns)
 
-columns = ('name', 'buying_price', 'selling_price', 'stock_quantity')
-new_products = ('raw milk', 50, 100, 200)
-insert_data(conn, 'products', new_products, columns)
+# columns = ('name', 'buying_price', 'selling_price', 'stock_quantity')
+# new_products = ('raw milk', 50, 100, 200)
+# insert_data(conn, 'products', new_products, columns)
 
 conn.close()
 
