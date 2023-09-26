@@ -9,6 +9,7 @@ conn = psycopg2.connect(
     
 )
         
+# get table data
 
 def get_data(table_name):
     
@@ -23,12 +24,29 @@ def get_data(table_name):
 
         return records
 
-# sales = get_data("sales")
+sales = get_data("sales")
 prods = get_data("products")
 
-# # here we loop throgh the prods 'list' to print each record
-for product in prods:
-    print(product)
+# remaining stock
+
+def remaining_stock():
+    stock = [] # a list to append each product info
+    cursor = conn.cursor()
+    
+    cursor.execute(f'SELECT * FROM rem_stock')
+    rem_stocks = cursor.fetchall()
+    
+    for rem_stock in rem_stocks:
+        product = {}  # Create a new dictionary for each product
+        product['name'] = rem_stock[1]
+        product['rem_stock'] = rem_stock[2]
+        stock.append(product)
+    
+    return stock
+
+s = remaining_stock()
+# the output is a list of dictionaries
+print(s)
 
 conn.close()
 
