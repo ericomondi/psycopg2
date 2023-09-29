@@ -48,7 +48,7 @@ def dash_int():
 @app.route("/remaining-stock")
 def rem_stock():
     records = remaining_stock()
-    return render_template("stock.html", stocks=records)
+    return render_template("stock.html", data=records)
 
 if __name__ == '__main__':
     app.run(debug=True)

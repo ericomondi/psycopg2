@@ -68,7 +68,7 @@ def remaining_stock():
     
     for rem_stock in rem_stocks:
         product = {}  # Create a new dictionary for each product
-        product['name'] = rem_stock[1]
+        product['product_name'] = rem_stock[1]
         product['rem_stock'] = rem_stock[2]
         stock.append(product)
     
