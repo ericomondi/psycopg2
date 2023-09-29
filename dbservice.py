@@ -8,14 +8,11 @@ conn = psycopg2.connect(
     password = "2345"
     
 )
-        
+# Create a cursor
+cursor = conn.cursor() 
 # get table data
 
 def get_data(table_name):
-    
-       
-        # Create a cursor
-        cursor = conn.cursor()
 
         # here we etrieve data from the table and return them as records
         
@@ -24,14 +21,47 @@ def get_data(table_name):
 
         return records
 
-sales = get_data("sales")
-prods = get_data("products")
+# def insert_data(table_name, values, columns):
+#     try:
+#         plc_holders = ", ".join(["%s" for column in columns])
+#         insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({plc_holders})"
+        
+#         cursor.execute(insert_query, values)
+#         conn.commit()
+        
+#         print(f"Data inserted into {table_name} successfully!")
+#     except psycopg2.Error as error:
+#         conn.rollback()  # Roll back the transaction on error
+#         print(f"Error inserting into {table_name}: {error}")
+
+# insert [product]
+def insert_product(values):
+    # SQL query to insert data
+    insert_query = "INSERT INTO products (product_name, buying_price, selling_price, stock_quantity) VALUES (%s, %s, %s, %s)"
+    try:
+        cursor.execute(insert_query, values)
+        conn.commit()
+    except Exception as e:
+        # Handle any errors here
+        print("Error:", e)
+        conn.rollback()
+    
+# insert sale
+def insert_sale(values):
+    # SQL query to insert data
+    insert_query = "INSERT INTO sales (product_id, quantity, created_at) VALUES (%s, %s, %s)"
+    try:
+        cursor.execute(insert_query, values)
+        conn.commit()
+    except Exception as e:
+        # Handle any errors here
+        print("Error:", e)
+        conn.rollback()
 
 # remaining stock
 
 def remaining_stock():
     stock = [] # a list to append each product info
-    cursor = conn.cursor()
     
     cursor.execute(f'SELECT * FROM rem_stock')
     rem_stocks = cursor.fetchall()
@@ -44,9 +74,6 @@ def remaining_stock():
     
     return stock
 
-s = remaining_stock()
-# the output is a list of dictionaries
-print(s)
 
-conn.close()
+
 
