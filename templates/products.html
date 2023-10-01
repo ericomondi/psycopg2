@@ -10,22 +10,26 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
-    
+     <!-- datatables -->
+     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+     <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script>
+     <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+     <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   </head>
   <body>
     {% extends "index.html" %} {% block content %}
     <div class="container">
       <h1 class="text-center">Products Table</h1>
       <!-- table -->
-      <table class="table">
+      <table class="table table-striped" style="width:100%" id="mtable">
         <thead>
           <tr>
-            <th scope="col">id</th>
-            <th scope="col">product_name</th>
-            <th scope="col">buying_price</th>
-            <th scope="col">selling_price</th>
-
-            <th scope="col">stock-quantity</th>
+            <th scope="col">ID</th>
+            <th scope="col">Products Name</th>
+            <th scope="col">Buying Price</th>
+            <th scope="col">Selling Price</th>
+            <th scope="col">Stock Quantity</th>
           </tr>
         </thead>
         <tbody id="products_table">

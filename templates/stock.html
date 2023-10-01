@@ -10,33 +10,30 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
-    <!-- Include jQuery -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"
-    />
-    <!-- Include DataTables JavaScript and CSS files -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-
-    
+     <!-- datatables -->
+     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+     <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script>
+     <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+     <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   </head>
   <body>
     {% extends "index.html" %} {% block content %}
     <div class="container">
       <h1 class="text-center">Remaining Stock Table</h1>
       <!-- table -->
-      <table id="example" class="display" style="width: 100%">
+      <table id="mytable" class="table table-striped" style="width:100%">
         <thead>
           <tr>
-            <th scope="col">product_name</th>
-            <th scope="col">rem_stock</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Stock</th>
           </tr>
         </thead>
         <tbody id="products_table">
-          {% for row in data %}
+          {% for stock in stocks %}
           <tr>
-            <td>{{ row["product_name"] }}</td>
-            <td>{{ row["rem_stock"] }}</td>
+            <td>{{ stock["product_name"] }}</td>
+            <td>{{ stock["rem_stock"] }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -49,22 +46,5 @@
     ></script>
 
     {% endblock %}
-    <script>
-      $(document).ready(function () {
-        console.log("DataTables initialization");
-        $("#example").DataTable();
-      });
-
-      // Customize data tables features
-
-      $(document).ready(function () {
-        $("#example").DataTable({
-          paging: true, // Enable pagination
-          searching: true, // Enable searching
-          ordering: true, // Enable column sorting
-          // Add more options as needed
-        });
-      });
-    </script>
-  </body>
+   </body>
 </html>
