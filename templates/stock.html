@@ -12,17 +12,17 @@
     />
      <!-- datatables -->
      <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-     <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script>
-     <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-     <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+    <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   </head>
   <body>
     {% extends "index.html" %} {% block content %}
     <div class="container">
       <h1 class="text-center">Remaining Stock Table</h1>
       <!-- table -->
-      <table id="mytable" class="table table-striped" style="width:100%">
+      <table id="my_table" class="table table-striped" style="width:100%">
         <thead>
           <tr>
             <th scope="col">Product Name</th>

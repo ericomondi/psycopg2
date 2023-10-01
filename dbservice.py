@@ -21,19 +21,6 @@ def get_data(table_name):
 
         return records
 
-# def insert_data(table_name, values, columns):
-#     try:
-#         plc_holders = ", ".join(["%s" for column in columns])
-#         insert_query = f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({plc_holders})"
-        
-#         cursor.execute(insert_query, values)
-#         conn.commit()
-        
-#         print(f"Data inserted into {table_name} successfully!")
-#     except psycopg2.Error as error:
-#         conn.rollback()  # Roll back the transaction on error
-#         print(f"Error inserting into {table_name}: {error}")
-
 # insert [product]
 def insert_product(values):
     # SQL query to insert data

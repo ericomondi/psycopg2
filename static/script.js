@@ -1,1 +1,1 @@
-new DataTable('#sales_table');
+new DataTable('#my_table');
