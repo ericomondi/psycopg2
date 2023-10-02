@@ -16,12 +16,15 @@
        {% block content %}
     <div class="container">
       
-      <h1>DASHBOARD</h1>
+      <!-- <h1>DASHBOARD</h1> -->
 
       <div class="row">
-        <div class="col-6" >
+        <div class="col-12">
+          <img src="{{ bar_chart_data }}" alt="Sales per Product Chart">
+        </div>
+        <div class="col-12" >
           
-            <canvas id="bar-chart" width="800" height="450"></canvas>
+          <img src="{{ bar_chart_rem }}" alt="Remaining Stock">
 
         </div>
         <div class="col-6" >
@@ -29,9 +32,7 @@
             <canvas id="pie-chart" width="800" height="450"></canvas>
 
         </div>
-        <div class="col-12">
-            <canvas id="line-chart" width="800" height="450"></canvas>
-        </div>
+       
         
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>

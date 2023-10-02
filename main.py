@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from dbservice import get_data, insert_product, insert_sale, remaining_stock
+import pygal
+
+
 app = Flask(__name__)   
 
 # index route
@@ -42,7 +45,43 @@ def sales_int():
 
 @app.route("/dashboard")
 def dash_int():
-    return render_template("dashboard.html")
+   
+    # sales per product
+    bar_chart = pygal.Bar()
+    sp = get_data("sales_per_product")
+    name = []
+    sale = []
+    id = []
+    for s in sp:
+     id.append(s[0])
+     name.append(s[1][:4])
+     sale.append(s[2])
+     
+
+    bar_chart.title = "Sales per Product"
+    bar_chart.x_labels = id
+    bar_chart.add('Sale', sale)
+    bar_chart_data = bar_chart.render_data_uri()
+
+
+    # remaining_stock
+    # Remaining stock per product (pie chart)
+    bar_chart = pygal.Bar()
+    remaining_stock_data = get_data("rem_stock")  # Query to get remaining stock by product
+    product_names = []
+    remaining_stock_values = []
+    id = []
+    for product in remaining_stock_data:
+        id.append(product[0])
+        product_names.append(product[1])
+        remaining_stock_values.append(product[2])
+    bar_chart.title = "Remaining Stock by Product"
+    bar_chart.x_labels = id
+    bar_chart.add('Stock', remaining_stock_values)
+    bar_chart_rem = bar_chart.render_data_uri()
+    
+
+    return render_template("dashboard.html", bar_chart_data=bar_chart_data, bar_chart_rem=bar_chart_rem)
 
 
 @app.route("/remaining-stock")
