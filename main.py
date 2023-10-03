@@ -34,14 +34,14 @@ def sales_int():
         # Retrieve form data
         product_id = int(request.form["product_id"])
         quantity = float(request.form["quantity"])
-        # created_at = (request.form["created_at"])
         values = (product_id,quantity,"now()")
         # Insert the sale into the database
         insert_sale(values)
         return redirect(url_for("sales_int"))
 
     records = get_data("sales")
-    return render_template("sales.html", sales= records)
+    prods = get_data("products")
+    return render_template("sales.html", sales= records, products = prods)
 
 @app.route("/dashboard")
 def dash_int():
