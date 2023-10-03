@@ -34,8 +34,8 @@ def sales_int():
         # Retrieve form data
         product_id = int(request.form["product_id"])
         quantity = float(request.form["quantity"])
-        created_at = (request.form["created_at"])
-        values = (product_id,quantity,created_at)
+        # created_at = (request.form["created_at"])
+        values = (product_id,quantity,"now()")
         # Insert the sale into the database
         insert_sale(values)
         return redirect(url_for("sales_int"))
@@ -65,7 +65,7 @@ def dash_int():
 
 
     # remaining_stock
-    # Remaining stock per product (pie chart)
+    # Remaining stock per product (bar chart)
     bar_chart = pygal.Bar()
     remaining_stock_data = get_data("rem_stock")  # Query to get remaining stock by product
     product_names = []
@@ -79,6 +79,9 @@ def dash_int():
     bar_chart.x_labels = id
     bar_chart.add('Stock', remaining_stock_values)
     bar_chart_rem = bar_chart.render_data_uri()
+
+    # alternatively
+
     
 
     return render_template("dashboard.html", bar_chart_rem=bar_chart_rem)
