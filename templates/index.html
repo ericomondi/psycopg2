@@ -11,36 +11,34 @@
       crossorigin="anonymous"
     />
     <style>
-       .active img {
+      .active img {
         height: 200px;
-      } 
-       .custom-col img {
+      }
+      .custom-col img {
         width: 200px;
         height: 100px;
-        
       }
-    
-       /* Custom CSS for responsive behavior */
-       .custom-col {
-            flex: 1;
-            /* justify-content: center; */
-            align-items: center;
-        }
-      /* body {
-        background-color: azure;
+
+      /* Custom CSS for responsive behavior */
+      .custom-col {
+        flex: 1;
+        /* justify-content: center; */
+        align-items: center;
       }
-      .container-fluid {
-        background-color: azure;
-      } */
+      /* Custom CSS for the flashes container */
+      .flashes-container {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{{ url_for('index') }}"
-            >Sales System</a
-          >
+          <a class="navbar-brand" href="{{ url_for('index') }}">Sales System</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -87,7 +85,9 @@
                     >
                   </li>
                   <li>
-                    <a class="dropdown-item" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a class="dropdown-item" href="{{ url_for('dashboard') }}"
+                      >Dashboard</a
+                    >
                   </li>
                 </ul>
               </li>
@@ -95,6 +95,18 @@
           </div>
         </div>
       </nav>
+      <!-- Flashes container -->
+      <div class="flashes-container">
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <div class="alert alert-primary" role="alert">
+          <ul class="list-unstyled">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %} {% endwith %}
+      </div>
       {% block content%}
       <div class="content">
         <div id="carouselExampleCaptions" class="carousel slide">
@@ -295,7 +307,6 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
-    
     {% endblock %}
   </body>
 </html>

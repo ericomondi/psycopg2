@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask import jsonify
+from flask import jsonify, flash
 from dbservice import get_data, insert_product, insert_sale, remaining_stock
 import pygal
 
 
 app = Flask(__name__)   
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # index route
 @app.route("/")
@@ -27,6 +28,7 @@ def add_product():
     values = (product_name,buying_price,selling_price,stock_quantity)
     # Insert the product into the database
     insert_product(values)
+    flash("Product succesfully added!")
     return redirect(url_for("products"))
     
 # get sales
@@ -45,6 +47,7 @@ def add_sale():
     values = (product_id,quantity,"now()")
     # Insert the sale into the database
     insert_sale(values)
+    flash("Sale added succefully!")
     return redirect(url_for("sales"))
 
 # dashboard
