@@ -1,12 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    {% extends "base.html" %}
+    <title>{% block title %}Home{% endblock %}</title>
 </head>
 <body>
-    {% extends "index.html" %} {% block content %}
+     {% block content %}
 
     <div class="container">
         <div id="carouselExampleCaptions" class="carousel slide">
@@ -195,5 +197,6 @@
             </div>
     </div>
     {% endblock %}
+    
 </body>
 </html>
