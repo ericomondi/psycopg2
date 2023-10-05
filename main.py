@@ -39,7 +39,7 @@ def sales():
     return render_template("sales.html", sales= records,products = prods)
 
 # add sale
-@app.route("/add-sale", methods=["GET", "POST"])
+@app.route("/add-sale", methods=["POST"])
 def add_sale():
     # Retrieve form data
     product_id = int(request.form["product_id"])
@@ -53,24 +53,6 @@ def add_sale():
 # dashboard
 @app.route("/dashboard")
 def dashboard():
-   
-    # sales per product
-    bar_chart = pygal.Bar()
-    sp = get_data("sales_per_product")
-    name = []
-    sale = []
-    id = []
-    for s in sp:
-     id.append(s[0])
-    #  name.append(s[1][:4])
-     sale.append(s[2])
-     
-    bar_chart.title = "Sales per Product"
-    bar_chart.x_labels = id
-    bar_chart.add('Sale', sale)
-    bar_chart_data = bar_chart.render_data_uri()
-
-
     # remaining_stock
     # Remaining stock per product (bar chart)
     bar_chart = pygal.Bar()
@@ -87,22 +69,29 @@ def dashboard():
     bar_chart.add('Stock', remaining_stock_values)
     bar_chart_rem = bar_chart.render_data_uri()
 
-    # top five sales according to products
-    # extract label and stock
-    data = get_data("top_five_sales")
-    top_five_sales = [{"label":row[0], "remaining_stock":row[1]} for row in data]
-    listof_data = jsonify(top_five_sales)
-    print(listof_data)
 
-    return render_template("dashboard.html", bar_chart_rem=bar_chart_rem, listof_data=listof_data)
-
-
-
+    return render_template("dashboard.html", bar_chart_rem=bar_chart_rem)
 
 @app.route("/remaining-stock")
 def rem_stock():
     records = remaining_stock()
     return render_template("stock.html", stocks=records)
+
+
+@app.context_processor
+def stock_quantity_processor():
+    def check_stock_quantity(product_id, quantity):
+        products = get_data("products")
+        for product in products:
+            if product[0] == product_id:
+                if product[4] >= quantity:  # Check if stock quantity is sufficient
+                    return True
+                else:
+                    flash("Product out of stock")
+                    return False
+        return False  # Product not found
+    return dict(check_stock_quantity=check_stock_quantity)
+
 
 
 
