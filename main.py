@@ -1,11 +1,24 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask import jsonify, flash
+from flask import  flash
 from dbservice import get_data, insert_product, insert_sale, remaining_stock
-import pygal
+# import pygal
 
 
 app = Flask(__name__)   
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+@app.context_processor
+def stock_quantity_processor():
+    def check_stock_quantity(product_id, quantity):
+        products = get_data("products")
+        for product in products:
+            if product[0] == product_id:
+                if product[4] >= quantity:  # Check if stock quantity is sufficient
+                    return True
+                else:
+                    return False
+        return False  # Product not found
+    return dict(check_stock_quantity=check_stock_quantity)
 
 # index route
 @app.route("/")
@@ -45,6 +58,8 @@ def add_sale():
     product_id = int(request.form["product_id"])
     quantity = float(request.form["quantity"])
     values = (product_id,quantity,"now()")
+
+    
     # Insert the sale into the database
     insert_sale(values)
     flash("Sale added succefully!")
@@ -53,44 +68,25 @@ def add_sale():
 # dashboard
 @app.route("/dashboard")
 def dashboard():
-    # remaining_stock
-    # Remaining stock per product (bar chart)
-    bar_chart = pygal.Bar()
-    remaining_stock_data = get_data("rem_stock")  # Query to get remaining stock by product
-    product_names = []
-    remaining_stock_values = []
-    id = []
-    for product in remaining_stock_data:
-        id.append(product[0])
-        product_names.append(product[1])
-        remaining_stock_values.append(product[2])
-    bar_chart.title = "Remaining Stock by Product"
-    bar_chart.x_labels = id
-    bar_chart.add('Stock', remaining_stock_values)
-    bar_chart_rem = bar_chart.render_data_uri()
+    # sales per day
+    data = get_data("sales_per_day")
+    dates = [date for date, profit in data]
+    profits = [profit for date, profit in data]
 
 
-    return render_template("dashboard.html", bar_chart_rem=bar_chart_rem)
+    # top five sales
+    top_sales = get_data("top_five_sales")
+    p_names = [name[0] for name in top_sales]
+    p_sales = [sale[1] for sale in top_sales]
+
+    return render_template("dashboard.html", dates=dates,profits=profits,p_names=p_names,p_sales=p_sales)
+
+    
 
 @app.route("/remaining-stock")
 def rem_stock():
     records = remaining_stock()
     return render_template("stock.html", stocks=records)
-
-
-@app.context_processor
-def stock_quantity_processor():
-    def check_stock_quantity(product_id, quantity):
-        products = get_data("products")
-        for product in products:
-            if product[0] == product_id:
-                if product[4] >= quantity:  # Check if stock quantity is sufficient
-                    return True
-                else:
-                    flash("Product out of stock")
-                    return False
-        return False  # Product not found
-    return dict(check_stock_quantity=check_stock_quantity)
 
 
 
