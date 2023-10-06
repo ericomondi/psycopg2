@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask import  flash
+from flask import  flash,session
 from dbservice import get_data, insert_product, insert_sale, remaining_stock
 from dbservice import check_email, check_email_password,create_user
-import re
+
 
 app = Flask(__name__)   
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -20,6 +20,11 @@ def stock_quantity_processor():
         return False  # Product not found
     return dict(check_stock_quantity=check_stock_quantity)
 
+
+# a function to check if user is authenticated
+def confirm_auth():
+    return 'user_id' in session
+
 # index route
 @app.route("/")
 def index():
@@ -31,8 +36,9 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        check = check_email_password(email, password)
-        if check:
+        user = check_email_password(email, password)
+        if user:
+            session['user_id'] = user[0]
             flash("Success")
             return redirect(url_for("dashboard"))
         else:
@@ -44,26 +50,24 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-     if request.method == 'POST' and 'full_name' in request.form and 'password' in request.form and 'email' in request.form:
+     if request.method == 'POST' and 'full_name' in request.form and 'email' in request.form and 'password' in request.form:
         fullname = request.form['full_name']
         password = request.form['password']
         email = request.form['email']
         values = (fullname,email,password)
-        email = check_email(email)
+        email_b = check_email(email)
 
         # Email Validation
-        if email:
+        if email_b:
             flash("Email is already in use")
-        # elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-        #     flash("Invalid email address")
-        # elif not re.match(r'[A-Za-z]+', fullname):
-        #     flash("Full name must contain characters and numbers")
-        # elif not  password or not email:
-        #     flash("Please fill out the form")
+        elif not  password or not email:
+            flash("Please fill all the inputs")
         else:
             create_user(values)
             flash("You have registered successfully!")
-
+            return redirect(url_for("dashboard"))
+    
+    # Render the register page for GET requests
      return render_template("register.html")
 
 # get products
@@ -88,23 +92,29 @@ def add_product():
 # get sales
 @app.route("/sales", methods=["GET"])
 def sales():
-    prods = get_data("products")
-    records = get_data("sales")
-    return render_template("sales.html", sales= records,products = prods)
+    if confirm_auth():
+        prods = get_data("products")
+        records = get_data("sales")
+        return render_template("sales.html", sales= records,products = prods)
+    else:
+        flash("You need to log in to access this page.")
+        return redirect(url_for("login"))
 
 # add sale
 @app.route("/add-sale", methods=["POST"])
 def add_sale():
-    # Retrieve form data
-    product_id = int(request.form["product_id"])
-    quantity = float(request.form["quantity"])
-    values = (product_id,quantity,"now()")
-
-    
-    # Insert the sale into the database
-    insert_sale(values)
-    flash("Sale added succefully!")
-    return redirect(url_for("sales"))
+    if confirm_auth():
+        # Retrieve form data
+        product_id = int(request.form["product_id"])
+        quantity = float(request.form["quantity"])
+        values = (product_id,quantity,"now()")
+        # Insert the sale into the database
+        insert_sale(values)
+        flash("Sale added succefully!")
+        return redirect(url_for("sales"))
+    else:
+        flash("You need to log in to access this page.")
+        return redirect(url_for("login"))
 
 # dashboard
 @app.route("/dashboard")
@@ -128,6 +138,13 @@ def dashboard():
 def rem_stock():
     records = remaining_stock()
     return render_template("stock.html", stocks=records)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("You have been logged out.")
+    return redirect(url_for("login"))
 
 
 if __name__ == '__main__':

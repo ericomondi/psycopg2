@@ -80,11 +80,10 @@ def check_email(email):
     existing_email = cursor.fetchone()
 
     if existing_email:
-        return True  # Email already exists in the database
+        return existing_email  # Email already exists
     else:
-        return False  # Email does not exist in the database
-
-
+        return False  # Email does not exist
+    
 # check if email and password match
 
 def check_email_password(email, password):
@@ -94,12 +93,25 @@ def check_email_password(email, password):
     # Check if a user with the provided email exists
     if user:
         # Check if the password matches
-        if user[3] == password:
-            return True  # Email and password match
-        else:
-            return False  # Password does not match
-    else:
-        return False  # Email does not exist
+        if user[3] == password:  
+            return user  # Return the user data
+    return False  # Email or password do not match
+
+
+
+# def check_email_password(email, password):
+#     cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+#     user = cursor.fetchone()
+
+#     # Check if a user with the provided email exists
+#     if user:
+#         # Check if the password matches
+#         if user[3] == password:
+#             return True  # Email and password match
+#         else:
+#             return False  # Password does not match
+#     else:
+#         return False  # Email does not exist
 
 
 
