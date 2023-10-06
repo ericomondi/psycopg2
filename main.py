@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask import  flash
 from dbservice import get_data, insert_product, insert_sale, remaining_stock
-# import pygal
-
+from dbservice import check_email, check_email_password,create_user
+import re
 
 app = Flask(__name__)   
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -24,6 +24,47 @@ def stock_quantity_processor():
 @app.route("/")
 def index():
     return render_template("landing.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        check = check_email_password(email, password)
+        if check:
+            flash("Success")
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Invalid logins")
+
+    # Render the login page for GET requests
+    return render_template("login.html")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+     if request.method == 'POST' and 'full_name' in request.form and 'password' in request.form and 'email' in request.form:
+        fullname = request.form['full_name']
+        password = request.form['password']
+        email = request.form['email']
+        values = (fullname,email,password)
+        email = check_email(email)
+
+        # Email Validation
+        if email:
+            flash("Email is already in use")
+        # elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+        #     flash("Invalid email address")
+        # elif not re.match(r'[A-Za-z]+', fullname):
+        #     flash("Full name must contain characters and numbers")
+        # elif not  password or not email:
+        #     flash("Please fill out the form")
+        else:
+            create_user(values)
+            flash("You have registered successfully!")
+
+     return render_template("register.html")
 
 # get products
 @app.route("/products",methods=["GET"])
@@ -68,8 +109,8 @@ def add_sale():
 # dashboard
 @app.route("/dashboard")
 def dashboard():
-    # sales per day
-    data = get_data("sales_per_day")
+    # profit per day
+    data = get_data("profit_per_day")
     dates = [date for date, profit in data]
     profits = [profit for date, profit in data]
 
@@ -87,8 +128,6 @@ def dashboard():
 def rem_stock():
     records = remaining_stock()
     return render_template("stock.html", stocks=records)
-
-
 
 
 if __name__ == '__main__':

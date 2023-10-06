@@ -45,6 +45,19 @@ def insert_sale(values):
         print("Error:", e)
         conn.rollback()
 
+# create user
+def create_user(values):
+    # SQL query to insert data
+    insert_query = "INSERT INTO users (full_name,email,password) VALUES (%s, %s, %s)"
+    try:
+        cursor.execute(insert_query, values)
+        conn.commit()
+    except Exception as e:
+        # Handle any errors here
+        print("Error:", e)
+        conn.rollback()
+
+
 # remaining stock
 
 def remaining_stock():
@@ -60,6 +73,35 @@ def remaining_stock():
         stock.append(product)
     
     return stock
+
+# check if email exist
+def check_email(email):
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    existing_email = cursor.fetchone()
+
+    if existing_email:
+        return True  # Email already exists in the database
+    else:
+        return False  # Email does not exist in the database
+
+
+# check if email and password match
+
+def check_email_password(email, password):
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+
+    # Check if a user with the provided email exists
+    if user:
+        # Check if the password matches
+        if user[3] == password:
+            return True  # Email and password match
+        else:
+            return False  # Password does not match
+    else:
+        return False  # Email does not exist
+
+
 
 
 
