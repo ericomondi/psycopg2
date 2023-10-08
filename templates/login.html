@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% extends "base.html" %}
-    <title>{% block title %}Login{% endblock %}</title>   
+    <title>{% block title %}Login{% endblock %}</title>
   </head>
   {% block content %}
   <body>
     <main class="form-signin w-100 m-auto">
-      <form  method="post" action="/login">
+      <form method="post" action="/login">
         <img
           class="mb-4"
           src="https://png.pngtree.com/png-vector/20191003/ourmid/pngtree-user-login-or-authenticate-icon-on-gray-background-flat-icon-ve-png-image_1786166.jpg"
@@ -54,9 +54,12 @@
         <button class="btn btn-primary w-100 py-2" type="submit">
           Sign in
         </button>
+        <p class=" w-100 py-2">
+          Dont have an account? <a href="{{ url_for('register') }}"> Sign up</a>
+        </p>
       </form>
     </main>
-   
+
     {% endblock %}
   </body>
 </html>

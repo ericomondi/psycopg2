@@ -14,7 +14,7 @@ cursor = conn.cursor()
 
 def get_data(table_name):
 
-        # here we etrieve data from the table and return them as records
+        # here we retrieve data from the table and return them as records
         
         cursor.execute(f"SELECT * FROM {table_name}")
         records = cursor.fetchall()

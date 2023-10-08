@@ -6,7 +6,6 @@
     <title>{% block title %}My Flask App{% endblock %}</title>
     <!-- Common scripts and styles -->
     <!-- datatables -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"> -->
     <link
       rel="stylesheet"
       href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
@@ -164,6 +163,12 @@
         border-top-left-radius: 0;
         border-top-right-radius: 0;
       }
+      /* custom css to hide the register and login button when session is active & viceversa to logout----------------- */
+      .user-logged-in .nav-link-register,
+      .user-logged-in .nav-link-login,
+      .user-logged-out .nav-link-logout {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -184,7 +189,9 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+            <ul
+              class="navbar-nav {% if 'user_id' in session %}user-logged-in{% endif %}"
+            >
               <li class="nav-item">
                 <a
                   class="nav-link active"
@@ -201,15 +208,13 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('sales') }}">Sales</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item nav-link-register">
                 <a class="nav-link" href="{{ url_for('register') }}"
                   >Register</a
                 >
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('login') }}"
-                  >Login</a
-                >
+              <li class="nav-item nav-link-login">
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
               </li>
               <li class="nav-item dropdown">
                 <a
@@ -221,7 +226,9 @@
                 >
                   <!-- Expand -->
                 </a>
-                <ul class="dropdown-menu">
+                <ul
+                  class="dropdown-menu {% if 'user_id' not in session %}user-logged-out{% endif %}"
+                >
                   <li>
                     <a class="dropdown-item" href="{{ url_for('rem_stock') }}"
                       >Stock</a
@@ -233,7 +240,9 @@
                     >
                   </li>
                   <li>
-                    <a class="dropdown-item" href="{{ url_for('logout') }}"
+                    <a
+                      class="dropdown-item nav-link-logout"
+                      href="{{ url_for('logout') }}"
                       >Logout</a
                     >
                   </li>
@@ -243,6 +252,11 @@
           </div>
         </div>
       </nav>
+      <!-- Display personalized greeting if a user is logged in -->
+      {% if 'user_name' in session %}
+      <p>Heloo, {{ session['user_name'] }}!</p>
+      {% endif %}
+
       <!-- Flashes container -->
       <div class="flashes-container">
         {% with messages = get_flashed_messages() %} {% if messages %}

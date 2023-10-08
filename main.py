@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask import  flash,session
 from dbservice import get_data, insert_product, insert_sale, remaining_stock
 from dbservice import check_email, check_email_password,create_user
+from datetime import datetime
 
 
 app = Flask(__name__)   
@@ -36,11 +37,20 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
+        values = ("",email,password)
         user = check_email_password(email, password)
+        found = check_email(email)
         if user:
             session['user_id'] = user[0]
-            flash("Success")
+            session['user_name'] = user[1]
+            # flash("Success")
+            flash(f'Welcome {user[1]}')
             return redirect(url_for("dashboard"))
+        elif not found: 
+            create_user(values)
+            flash("Account created!")
+            flash("Login to access account")
+            return redirect(url_for("login"))
         else:
             flash("Invalid logins")
 
@@ -72,9 +82,13 @@ def register():
 
 # get products
 @app.route("/products",methods=["GET"])
-def products():    
-    records = get_data("products")
-    return render_template("products.html", products=records )
+def products():
+    if confirm_auth():    
+        records = get_data("products")
+        return render_template("products.html", products=records )
+    else:
+        flash("You need to log in to access this page.")
+        return redirect(url_for("login"))
 
 # add product
 @app.route("/add-product",methods=["POST"])
@@ -103,32 +117,33 @@ def sales():
 # add sale
 @app.route("/add-sale", methods=["POST"])
 def add_sale():
-    if confirm_auth():
-        # Retrieve form data
-        product_id = int(request.form["product_id"])
-        quantity = float(request.form["quantity"])
-        values = (product_id,quantity,"now()")
-        # Insert the sale into the database
-        insert_sale(values)
-        flash("Sale added succefully!")
-        return redirect(url_for("sales"))
-    else:
-        flash("You need to log in to access this page.")
-        return redirect(url_for("login"))
+    # Retrieve form data
+    product_id = int(request.form["product_id"])
+    quantity = float(request.form["quantity"])
+    values = (product_id,quantity,"now()")
+    # Insert the sale into the database
+    insert_sale(values)
+    flash("Sale added succefully!")
+    return redirect(url_for("sales"))
+
 
 # dashboard
 @app.route("/dashboard")
 def dashboard():
-    # profit per day
-    data = get_data("profit_per_day")
-    dates = [date for date, profit in data]
-    profits = [profit for date, profit in data]
+    if confirm_auth():
+        # profit per day
+        data = get_data("profit_per_day")
+        dates = [date for date, profit in data]
+        profits = [profit for date, profit in data]
 
 
-    # top five sales
-    top_sales = get_data("top_five_sales")
-    p_names = [name[0] for name in top_sales]
-    p_sales = [sale[1] for sale in top_sales]
+        # top five sales
+        top_sales = get_data("top_five_sales")
+        p_names = [name[0] for name in top_sales]
+        p_sales = [sale[1] for sale in top_sales]
+    else:
+        flash("You need to log in to access this page.")
+        return redirect(url_for("login"))
 
     return render_template("dashboard.html", dates=dates,profits=profits,p_names=p_names,p_sales=p_sales)
 
@@ -136,13 +151,17 @@ def dashboard():
 
 @app.route("/remaining-stock")
 def rem_stock():
-    records = remaining_stock()
-    return render_template("stock.html", stocks=records)
-
+    if confirm_auth():
+        records = remaining_stock()
+        return render_template("stock.html", stocks=records)
+    else:
+        flash("You need to log in to access this page.")
+        return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
-    session.clear()
+    session.pop('user_id', None)
+    session.pop('user_name', None)
     flash("You have been logged out.")
     return redirect(url_for("login"))
 
