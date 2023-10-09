@@ -98,20 +98,7 @@ def check_email_password(email, password):
     return False  # Email or password do not match
 
 
-
-# def check_email_password(email, password):
-#     cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-#     user = cursor.fetchone()
-
-#     # Check if a user with the provided email exists
-#     if user:
-#         # Check if the password matches
-#         if user[3] == password:
-#             return True  # Email and password match
-#         else:
-#             return False  # Password does not match
-#     else:
-#         return False  # Email does not exist
+   
 
 
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>login-page</title>
+    <link rel="icon" type="image/x-icon" href="/favicoin.png" />
+    <!-- style sheet -->
+    <link rel="stylesheet" href="main.css" />
+    <!-- script -->
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <!-- dashboard -->
+    <div class="container">
+      <div class="login_div">
+        <img
+          src="https://png.pngtree.com/png-vector/20191003/ourmid/pngtree-user-login-or-authenticate-icon-on-gray-background-flat-icon-ve-png-image_1786166.jpg"
+          alt=""
+        />
+        <br />
+        <button class="login_btn" onclick="openForm()">Access Account</button>
+      </div>
+      <!-- The form -->
+      <div class="form-popup" id="myForm">
+        <form class="form-container" id="the_form" method="post" name="myform">
+          <h1>Login</h1>
+
+          <label for="email"><b>Email</b></label>
+          <input
+            type="text"
+            placeholder="Enter Email"
+            id="email"
+            name="email"
+            required=""
+          />
+
+          <label for="psw"><b>Password</b></label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Enter Password"
+            name="psw"
+            required=""
+          />
+          <!-- An element to toggle between password visibility -->
+          <input type="checkbox" onclick="toggle_pass()" /><p>Show Password</p>
+          <!-- <div id="sucalert_mes erralert_mes" class="alert_mes"></div> -->
+          <input
+            type="button"
+            value="Login"
+            id="login"
+            class="btn"
+            onclick="validate()"
+          />
+
+          <button type="button" class="btn cancel" onclick="closeForm()">
+            Close
+          </button>
+          <span
+            ><b class="note">Note : </b>For this demo use following email and
+            password. <br /><b class="valid"
+              >Email : test@mail.com <br />Password : test#123</b
+            ></span
+          >
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

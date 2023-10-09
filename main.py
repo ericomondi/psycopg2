@@ -43,7 +43,6 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['user_name'] = user[1]
-            # flash("Success")
             flash(f'Welcome {user[1]}')
             return redirect(url_for("dashboard"))
         elif not found: 
