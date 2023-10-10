@@ -74,7 +74,7 @@ def register():
         else:
             create_user(values)
             flash("You have registered successfully!")
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("login"))
     
     # Render the register page for GET requests
      return render_template("register.html")
