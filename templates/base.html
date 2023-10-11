@@ -360,8 +360,42 @@
       </div>
       <!-- Content block that child templates will override -->
       <div id="content">{% block content %}{% endblock %}</div>
-      <main>
-      </main>
+      <!-- common footer -->
+      <footer class="bg-dark text-light py-4">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Contact Information</h5>
+              <p>
+                <i class="fas fa-map-marker"></i> 123 Main Street, City, Country
+              </p>
+              <p>
+                <i class="fas fa-envelope"></i> <a href="mailto:info@example.com">info@example.com</a>
+              </p>
+              <p>
+                <i class="fas fa-phone"></i> +1 (123) 456-7890
+              </p>
+            </div>
+            <div class="col-md-6">
+              <h5>Quick Links</h5>
+              <ul class="list-unstyled">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12 text-center">
+              <p>&copy; 2023 Your Company Name. All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+      
+
+     
     </div>
   </body>
 </html>
