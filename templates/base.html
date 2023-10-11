@@ -250,102 +250,109 @@
           margin-top: 7rem;
         }
       }
+      /* Ensure header extends to full width */
       .my-header {
-        margin-top: -50px;
+        width: 100%;
+      }
+
+      /* Ensure footer extends to full width */
+      footer {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      /* Remove default margin and padding from the body */
+      body {
+        padding: 0;
+        margin: 0;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <header data-bs-theme="dark" class="my-header">
-        <!-- Common navbar -->
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-          <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('index') }}"
-              >Sales System</a
+    <header data-bs-theme="dark" class="my-header">
+      <!-- Common navbar -->
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{{ url_for('index') }}">Sales System</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul
+              class="navbar-nav {% if 'user_id' in session %}user-logged-in{% endif %}"
             >
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNavDropdown"
-              aria-controls="navbarNavDropdown"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-              <ul
-                class="navbar-nav {% if 'user_id' in session %}user-logged-in{% endif %}"
-              >
-                <li class="nav-item">
-                  <a
-                    class="nav-link active"
-                    aria-current="page"
-                    href="{{ url_for('index') }}"
-                    >Home</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('products') }}"
-                    >Products</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('sales') }}">Sales</a>
-                </li>
-                <li class="nav-item nav-link-register">
-                  <a class="nav-link" href="{{ url_for('register') }}"
-                    >Register</a
-                  >
-                </li>
-                <li class="nav-item nav-link-login">
-                  <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <!-- Expand -->
-                  </a>
-                  <ul
-                    class="dropdown-menu {% if 'user_id' not in session %}user-logged-out{% endif %}"
-                  >
-                    <li>
-                      <a class="dropdown-item" href="{{ url_for('rem_stock') }}"
-                        >Stock</a
-                      >
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="{{ url_for('dashboard') }}"
-                        >Dashboard</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link-logout"
-                        href="{{ url_for('logout') }}"
-                        >Logout</a
-                      >
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="{{ url_for('index') }}"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('products') }}"
+                  >Products</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('sales') }}">Sales</a>
+              </li>
+              <li class="nav-item nav-link-register">
+                <a class="nav-link" href="{{ url_for('register') }}"
+                  >Register</a
+                >
+              </li>
+              <li class="nav-item nav-link-login">
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <!-- Expand -->
+                </a>
+                <ul
+                  class="dropdown-menu {% if 'user_id' not in session %}user-logged-out{% endif %}"
+                >
+                  <li>
+                    <a class="dropdown-item" href="{{ url_for('rem_stock') }}"
+                      >Stock</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{{ url_for('dashboard') }}"
+                      >Dashboard</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item nav-link-logout"
+                      href="{{ url_for('logout') }}"
+                      >Logout</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </div>
-        </nav>
-      </header>
-
-      <!-- Display personalized greeting if a user is logged in -->
-      <!-- {% if 'user_name' in session %}
-      <p>Heloo, {{ session['user_name'] }}!</p>
-      {% endif %} -->
-
+        </div>
+      </nav>
+    </header>
+    <!-- body content -->
+    <div class="container">
       <!-- Flashes container -->
       <div class="flashes-container">
         {% with messages = get_flashed_messages() %} {% if messages %}
@@ -360,42 +367,38 @@
       </div>
       <!-- Content block that child templates will override -->
       <div id="content">{% block content %}{% endblock %}</div>
-      <!-- common footer -->
-      <footer class="bg-dark text-light py-4">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6">
-              <h5>Contact Information</h5>
-              <p>
-                <i class="fas fa-map-marker"></i> 123 Main Street, City, Country
-              </p>
-              <p>
-                <i class="fas fa-envelope"></i> <a href="mailto:info@example.com">info@example.com</a>
-              </p>
-              <p>
-                <i class="fas fa-phone"></i> +1 (123) 456-7890
-              </p>
-            </div>
-            <div class="col-md-6">
-              <h5>Quick Links</h5>
-              <ul class="list-unstyled">
-                <li><a href="/">Home</a></li>
-                <li><a href="/products">Products</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/contact">Contact</a></li>
-              </ul>
-            </div>
+    </div>
+    <!-- common footer -->
+    <footer class="bg-dark text-light py-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Contact Information</h5>
+            <p>
+              <i class="fas fa-map-marker"></i> 123 Main Street, City, Country
+            </p>
+            <p>
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:info@example.com">info@example.com</a>
+            </p>
+            <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
           </div>
-          <div class="row mt-3">
-            <div class="col-md-12 text-center">
-              <p>&copy; 2023 Your Company Name. All rights reserved.</p>
-            </div>
+          <div class="col-md-6">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/">Home</a></li>
+              <li><a href="/products">Products</a></li>
+              <li><a href="/about">About Us</a></li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
           </div>
         </div>
-      </footer>
-      
-
-     
-    </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <p>&copy; 2023 Your Company Name. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
