@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% extends "base.html" %}
+    <title>{% block title %}Receipt{% endblock %}</title>
+  </head>
+  <body>
+    {% block content %}
+    <!-- Receipt Section (Initially Hidden) -->
+    <div id="receiptSection">
+      <h2>Receipt</h2>
+      {% for i in receipt %}
+      <div id="receiptDetails">
+        <p>Product Name: <span id="productName">{{ i[1] }}</span></p>
+        <p>Price: ${{ i[2][0] }}</p>
+        <p>Quantity: {{ i[3][0] }}</p>
+        <p>Total Amount: ${{ i[4] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <a href="{{ url_for('add_sale') }}" class="btn btn-primary">Back</a>
+    {% endblock %}
+  </body>
+</html>

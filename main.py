@@ -23,6 +23,7 @@ def stock_quantity_processor():
 
 
 # a function to check if user is authenticated
+# decorator function
 def confirm_auth():
     return 'user_id' in session
 
@@ -112,18 +113,31 @@ def sales():
     else:
         flash("You need to log in to access this page.")
         return redirect(url_for("login"))
+    
+
+@app.route("/receipt" , methods = ["GET"])
+def receipt():
+    receipt= get_data("last_receipt")
+    return render_template("receipt.html", receipt=receipt)
 
 # add sale
-@app.route("/add-sale", methods=["POST"])
+@app.route("/add-sale", methods=["GET", "POST"])
 def add_sale():
-    # Retrieve form data
-    product_id = int(request.form["product_id"])
-    quantity = float(request.form["quantity"])
-    values = (product_id,quantity,"now()")
-    # Insert the sale into the database
-    insert_sale(values)
-    flash("Sale added succefully!")
-    return redirect(url_for("sales"))
+    if confirm_auth():
+        if request.method == "POST":
+            if "product_id" in request.form and "quantity" in request.form:
+                product_id = int(request.form["product_id"])
+                quantity = float(request.form["quantity"])
+                user_id = session["user_id"]  # Capture the active user id from the session
+                values = (product_id, quantity, "now()", user_id)
+                # Insert the sale into the database
+                insert_sale(values)  # Call your dbservice function to insert a sale
+                # return redirect(url_for("add-sale"))
+            else:
+                flash("Make sure all inputs are captured")
+
+        prods = get_data("products")
+        return render_template("add-sale.html", products=prods)
 
 
 # dashboard

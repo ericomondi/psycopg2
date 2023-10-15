@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% extends "base.html" %}
     <title>{% block title %}Sales{% endblock %}</title>
+    <style>
+      /* Add custom styles for the sticky button */
+      .btn-sticky {
+        position: fixed;
+        bottom: 20px; /* Adjust this value to control the distance from the bottom */
+        right: 20px; /* Adjust this value to control the distance from the right */
+        z-index: 999; /* Ensure it appears above other content */
+      }
+    </style>
   </head>
   <body>
     {% block content %}
@@ -19,6 +28,7 @@
           <th scope="col">Product ID</th>
           <th scope="col">Quantity</th>
           <th scope="col">Created-At</th>
+          <th scope="col">User ID</th>
         </tr>
       </thead>
       <tbody id="products_table">
@@ -28,47 +38,12 @@
           <td>{{ sale[1] }}</td>
           <td>{{ sale[2] }}</td>
           <td>{{ sale[3] }}</td>
+          <td>{{ sale[4] }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    <!-- add products from -->
-    <div class="container mt-4">
-      <h1>Add Sale</h1>
-      <form id="sales_form" method="post" action="/add-sale">
-        <!-- Product ID -->
-        <div class="mb-3">
-          <label for="product_id" class="form-label">Product ID</label>
-
-          <select
-            name="product_id"
-            type="number"
-            id="product_id"
-            class="form-control"
-            required
-          >
-            {% for product in products %}
-            <option value="{{ product[0] }}">{{ product[1] }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- Quantity -->
-        <div class="mb-3">
-          <label for="quantity" class="form-label">Quantity</label>
-          <input
-            type="number"
-            class="form-control"
-            id="quantity"
-            name="quantity"
-            required
-          />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Add Sale</button>
-      </form>
-    </div>
-
+    <button class="btn btn-primary btn-sticky" id="add-sale-button" onclick="addSale()" >Add New Sale</button>
     {% endblock %}
   </body>
 </html>

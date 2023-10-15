@@ -4,10 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% extends "base.html" %}
-    <title>{% block title %}Dashboard{% endblock %}</title>   
+    <title>{% block title %}Dashboard{% endblock %}</title>  
+    {% block content %} 
+    <style>
+      
+    </style>
+    
   </head>
   <body>
-       {% block content %}
+       
       <div class="row">
         <div class="col-6" >
 
@@ -23,78 +28,88 @@
         <div class="col-12">
             <canvas id="line-chart" width="800" height="450"></canvas>
         </div>
-       
-        
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-   
+          
     <script>
       var labels = JSON.parse('{{ dates | tojson | safe }}');
       var data = JSON.parse('{{ profits | tojson | safe }}');
       var p_names = JSON.parse('{{ p_names | tojson | safe }}');
       var p_sales = JSON.parse('{{ p_sales | tojson | safe }}');
       console.log(labels)
-new Chart(document.getElementById("line-chart"), {
-  type: 'line',
-  data: {
-    labels: labels,
-    datasets: [{ 
-        data: data,
-        label: "Profits Per Day",
-        borderColor: "#3e95cd",
-        fill: false
-      }
-    ]
-  },
-  options: {
-    title: {
-      display: true,
-      text: 'Profit per day (in ksh)'
-    }
-  }
-});
-
-        // Bar chart
-new Chart(document.getElementById("bar-chart"), {
-    type: 'bar',
-    data: {
-      labels: p_names,
-      datasets: [
-        {
-          label: "Top Sales",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-          data: p_sales
+    new Chart(document.getElementById("line-chart"), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{ 
+            data: data,
+            label: "Profits Per Day",
+            borderColor: "#3e95cd",
+            fill: false
+          }
+        ]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Profit per day (in ksh)'
         }
-      ]
-    },
-    options: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Top five sales in the bussiness'
       }
-    }
-});
+    });
 
-new Chart(document.getElementById("pie-chart"), {
-    type: 'pie',
-    data: {
-      labels: p_names,
-      datasets: [{
-        label: "Top five sales",
-        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-        data: p_sales
-      }]
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Top five sales of the bussiness'
-      }
-    }
-});
-    </script>
+            // Bar chart
+    new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+          labels: p_names,
+          datasets: [
+            {
+              label: "Top Sales",
+              backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+              data: p_sales
+            }
+          ]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Top five sales in the bussiness'
+          }
+        }
+    });
+
+    new Chart(document.getElementById("pie-chart"), {
+        type: 'pie',
+        data: {
+          labels: p_names,
+          datasets: [{
+            label: "Top five sales",
+            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+            data: p_sales
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Top five sales of the bussiness'
+          }
+        }
+    });
+
+
+    // Add this script to hide the footer when the page loads
+    window.addEventListener('load', function() {
+                var footer = document.querySelector('footer');
+                if (footer) {
+                  footer.style.display = 'none';
+                }
+              });
+        </script>
+        
+              
+            
         {% endblock%}
-
+        
+       
   </body>
 </html>
 

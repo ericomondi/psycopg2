@@ -1,5 +1,5 @@
 import psycopg2
-
+from flask import flash
  # Here we establish the connection
 conn = psycopg2.connect(
     host='127.0.0.1',
@@ -36,14 +36,17 @@ def insert_product(values):
 # insert sale
 def insert_sale(values):
     # SQL query to insert data
-    insert_query = "INSERT INTO sales (product_id, quantity, created_at) VALUES (%s, %s, %s)"
+    insert_query = "INSERT INTO sales (product_id, quantity, created_at, user_id) VALUES (%s, %s, %s, %s)"
     try:
         cursor.execute(insert_query, values)
         conn.commit()
+        flash("Sale added Succecfully!")
     except Exception as e:
         # Handle any errors here
         print("Error:", e)
         conn.rollback()
+        flash("Error: Failed to add the sale. Please try again or contact support.")
+
 
 # create user
 def create_user(values):
@@ -56,6 +59,20 @@ def create_user(values):
         # Handle any errors here
         print("Error:", e)
         conn.rollback()
+
+
+# create user
+def create_receipt(values):
+    # SQL query to insert data
+    insert_query = "INSERT INTO receipts (sale_id,issue_date,total_amount) VALUES (%s, %s, %s)"
+    try:
+        cursor.execute(insert_query, values)
+        conn.commit()
+    except Exception as e:
+        # Handle any errors here
+        print("Error:", e)
+        conn.rollback()
+
 
 
 # remaining stock
