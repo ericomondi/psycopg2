@@ -3,6 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+      }
+
+      #receiptSection {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px #888888;
+      }
+
+      h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      #receiptDetails {
+        margin: 20px 0;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 5px 0;
+      }
+
+      span {
+        font-weight: bold;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        max-width: 150px;
+        margin: 20px auto;
+        background-color: #007bff;
+        color: #fff;
+        text-align: center;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
     {% extends "base.html" %}
     <title>{% block title %}Receipt{% endblock %}</title>
   </head>
