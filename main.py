@@ -158,7 +158,7 @@ def dashboard():
         flash("You need to log in to access this page.")
         return redirect(url_for("login"))
 
-    return render_template("dashboard.html", dates=dates,profits=profits,p_names=p_names,p_sales=p_sales)
+    return render_template("dashboar.html", dates=dates,profits=profits,p_names=p_names,p_sales=p_sales)
 
     
 
