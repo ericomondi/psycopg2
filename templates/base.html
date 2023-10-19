@@ -137,7 +137,7 @@
                   </li>
                   <li>
                     <a
-                      class="dropdown-item nav-link-logout"
+                      class="dropdown-item"
                       href="{{ url_for('logout') }}"
                       >Logout</a
                     >
@@ -190,7 +190,7 @@
     <!-- body content -->
     <div class="container">
       <!-- Flashes container -->
-      <div class="flashes-container">
+      <div id="flashes-container" class="flashes-container">
         {% with messages = get_flashed_messages() %} {% if messages %}
         <div class="alert alert-primary" role="alert">
           <ul class="list-unstyled">

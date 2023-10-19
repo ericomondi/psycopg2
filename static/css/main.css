@@ -119,7 +119,7 @@
   /* custom css to hide the register and login button when session is active & viceversa to logout----------------- */
   .user-logged-in .nav-link-register,
   .user-logged-in .nav-link-login,
-  .user-logged-out .nav-link-logout {
+  .user-logged-out{
     display: none;
   }
 

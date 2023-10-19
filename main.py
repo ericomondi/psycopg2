@@ -41,10 +41,13 @@ def login():
         values = ("",email,password)
         user = check_email_password(email, password)
         found = check_email(email)
+        x = user[1]
+        username = x.split()
+        first_name = username[0]
         if user:
             session['user_id'] = user[0]
             session['user_name'] = user[1]
-            flash(f'Welcome {user[1]}')
+            flash(f'Welcome {first_name}')
             return redirect(url_for("dashboard"))
         elif not found: 
             create_user(values)
@@ -158,7 +161,7 @@ def dashboard():
         flash("You need to log in to access this page.")
         return redirect(url_for("login"))
 
-    return render_template("dashboar.html", dates=dates,profits=profits,p_names=p_names,p_sales=p_sales)
+    return render_template("dashboard.html", dates=dates,profits=profits,p_names=p_names,p_sales=p_sales)
 
     
 
