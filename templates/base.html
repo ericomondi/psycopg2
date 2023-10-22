@@ -107,7 +107,7 @@
               <li class="nav-item nav-link-login">
                 <a class="nav-link" href="{{ url_for('login') }}">Login</a>
               </li>
-              <li class="nav-item dropdown">
+              <li class="nav-item dropdown {% if 'user_id' not in session %}user-logged-out{% endif %}">
                 <a
                   class="nav-link dropdown-toggle"
                   href="#"
@@ -118,7 +118,7 @@
                   <!-- Expand -->
                 </a>
                 <ul
-                  class="dropdown-menu {% if 'user_id' not in session %}user-logged-out{% endif %}"
+                  class="dropdown-menu "
                 >
                   <li>
                     <a class="dropdown-item" href="{{ url_for('rem_stock') }}"
@@ -203,7 +203,11 @@
       </div>
       <!-- Content block that child templates will override -->
       <div id="content" class="content-div">
-        {% block content %}{% endblock %}
+        {% block content %}
+        
+        
+        
+        {% endblock %}
       </div>
     </div>
     <!-- common footer -->
