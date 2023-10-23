@@ -1,31 +1,46 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask import  flash,session
 from dbservice import get_data, insert_product, insert_sale, remaining_stock
-from dbservice import check_email, check_email_password,create_user
-from datetime import datetime
+from dbservice import check_email, check_email_password,create_user, get_pid
+from functools import wraps
+import barcode
+from barcode import Code128
+from barcode.writer import ImageWriter
+
 
 
 app = Flask(__name__)   
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-@app.context_processor
-def stock_quantity_processor():
-    def check_stock_quantity(product_id, quantity):
-        products = get_data("products")
-        for product in products:
-            if product[0] == product_id:
-                if product[4] >= quantity:  # Check if stock quantity is sufficient
-                    return True
-                else:
-                    return False
-        return False  # Product not found
-    return dict(check_stock_quantity=check_stock_quantity)
-
-
 # a function to check if user is authenticated
-# decorator function
-def confirm_auth():
-    return 'user_id' in session
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'loggedin' in session:
+            return f(*args, **kwargs)
+        else:
+            print(session)  # Debug: Print the session data
+            flash("You need to login first")
+            return redirect(url_for('login'))
+    return wrap
+
+
+
+@app.context_processor
+def generate_barcode():
+    id_list = get_pid()  
+    barcode_paths = []
+    for pid_tuple in id_list:
+        pid = pid_tuple[0]
+        try:
+            code = Code128(str(pid), writer=ImageWriter())
+            barcode_path = f"static/barcodes/{pid}.png"
+            code.save(barcode_path)
+            barcode_paths.append(barcode_path)
+        except Exception as e:
+            print(f"Error generating barcode for product with ID {pid}: {str(e)}")
+    return {'generate_barcode': generate_barcode}
+
 
 # index route
 @app.route("/")
@@ -41,12 +56,13 @@ def login():
         values = ("",email,password)
         user = check_email_password(email, password)
         found = check_email(email)
-        x = user[1]
-        username = x.split()
-        first_name = username[0]
         if user:
+            x = user[1]
+            username = x.split()
+            first_name = username[0]
             session['user_id'] = user[0]
             session['user_name'] = user[1]
+            session['loggedin'] = True
             flash(f'Welcome {first_name}')
             return redirect(url_for("dashboard"))
         elif not found: 
@@ -84,15 +100,13 @@ def register():
      return render_template("register.html")
 
 # get products
-@app.route("/products",methods=["GET"])
-def products():
-    if confirm_auth():    
-        records = get_data("products")
-        return render_template("products.html", products=records )
-    else:
-        flash("You need to log in to access this page.")
-        return redirect(url_for("login"))
 
+@app.route("/products",methods=["GET"])
+@login_required
+def products():
+    records = get_data("products")
+    return render_template("products.html", products=records )
+   
 # add product
 @app.route("/add-product",methods=["POST"])
 def add_product():
@@ -108,14 +122,12 @@ def add_product():
     
 # get sales
 @app.route("/sales", methods=["GET"])
+@login_required
 def sales():
-    if confirm_auth():
-        prods = get_data("products")
-        records = get_data("sales")
-        return render_template("sales.html", sales= records,products = prods)
-    else:
-        flash("You need to log in to access this page.")
-        return redirect(url_for("login"))
+    prods = get_data("products")
+    records = get_data("sales")
+    return render_template("sales.html", sales= records,products = prods)
+   
     
 
 @app.route("/receipt" , methods = ["GET"])
@@ -126,7 +138,6 @@ def receipt():
 # add sale
 @app.route("/add-sale", methods=["GET", "POST"])
 def add_sale():
-    if confirm_auth():
         if request.method == "POST":
             if "product_id" in request.form and "quantity" in request.form:
                 product_id = int(request.form["product_id"])
@@ -146,20 +157,17 @@ def add_sale():
 # dashboard
 @app.route("/dashboard")
 def dashboard():
-    if confirm_auth():
-        # profit per day
-        data = get_data("profit_per_day")
-        dates = [date for date, profit in data]
-        profits = [profit for date, profit in data]
+    # profit per day
+    data = get_data("profit_per_day")
+    dates = [date for date, profit in data]
+    profits = [profit for date, profit in data]
 
 
-        # top five sales
-        top_sales = get_data("top_five_sales")
-        p_names = [name[0] for name in top_sales]
-        p_sales = [sale[1] for sale in top_sales]
-    else:
-        flash("You need to log in to access this page.")
-        return redirect(url_for("login"))
+    # top five sales
+    top_sales = get_data("top_five_sales")
+    p_names = [name[0] for name in top_sales]
+    p_sales = [sale[1] for sale in top_sales]
+   
 
     return render_template("dashboard.html", dates=dates,profits=profits,p_names=p_names,p_sales=p_sales)
 
@@ -167,12 +175,9 @@ def dashboard():
 
 @app.route("/remaining-stock")
 def rem_stock():
-    if confirm_auth():
-        records = remaining_stock()
-        return render_template("stock.html", stocks=records)
-    else:
-        flash("You need to log in to access this page.")
-        return redirect(url_for("login"))
+    records = remaining_stock()
+    return render_template("stock.html", stocks=records)
+
 
 @app.route("/logout")
 def logout():

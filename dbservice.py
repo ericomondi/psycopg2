@@ -115,6 +115,12 @@ def check_email_password(email, password):
     return False  # Email or password do not match
 
 
+def get_pid():
+    cursor.execute("SELECT product_id FROM products")
+    result = cursor.fetchall()
+    return result
+
+
    
 
 
