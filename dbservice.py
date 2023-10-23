@@ -121,6 +121,21 @@ def get_pid():
     return result
 
 
+def update_product_barcode(product_id, barcode_path):
+    try:
+        update_query = """
+        UPDATE products
+        SET barcode = %s
+        WHERE product_id = %s;
+        """
+        cursor.execute(update_query, (barcode_path, product_id))
+        conn.commit()
+        print("success")
+        return True
+    except Exception as e:
+        # Handle any errors (e.g., SQL errors)
+        print(f"Error updating product with ID {product_id}: {str(e)}")
+        return False
    
 
 

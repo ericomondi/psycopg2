@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% extends "base.html" %}
+    <title>{% block title %}Products Barcode{% endblock %}</title>
+</head>
+<body>
+    {% block content %}
+    <h1>Products with Barcodes</h1>
+    <table>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Barcode</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>{{ product[0] }}</td>
+            <td>{{ product[1] }}</td>
+            <td>
+                <img src="{{ url_for('static', filename='barcodes/' + product[5]) + '.png' }}" alt="Barcode">
+            </td>
+        </tr>
+        
+        {% endfor %}
+    </table>
+    {% endblock %}
+</body>
+</html>

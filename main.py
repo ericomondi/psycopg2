@@ -1,15 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask import  flash,session
-from dbservice import get_data, insert_product, insert_sale, remaining_stock
+from dbservice import get_data, insert_product, insert_sale, remaining_stock, update_product_barcode
 from dbservice import check_email, check_email_password,create_user, get_pid
 from functools import wraps
 import barcode
 from barcode import Code128
 from barcode.writer import ImageWriter
+import psycopg2
 
 
 
-app = Flask(__name__)   
+app = Flask(__name__, static_url_path='/static')   
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # a function to check if user is authenticated
@@ -24,22 +25,6 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
-
-
-@app.context_processor
-def generate_barcode():
-    id_list = get_pid()  
-    barcode_paths = []
-    for pid_tuple in id_list:
-        pid = pid_tuple[0]
-        try:
-            code = Code128(str(pid), writer=ImageWriter())
-            barcode_path = f"static/barcodes/{pid}.png"
-            code.save(barcode_path)
-            barcode_paths.append(barcode_path)
-        except Exception as e:
-            print(f"Error generating barcode for product with ID {pid}: {str(e)}")
-    return {'generate_barcode': generate_barcode}
 
 
 # index route
@@ -179,12 +164,52 @@ def rem_stock():
     return render_template("stock.html", stocks=records)
 
 
+
+@app.context_processor
+def generate_barcode():
+    id_list = get_pid()  # Replace with your function to get product IDs
+    barcode_paths = []
+
+    for pid_tuple in id_list:
+        pid = pid_tuple[0]
+        try:
+            code = Code128(str(pid), writer=ImageWriter())
+            barcode_filename = f"{pid}"  
+            barcode_path = f"barcodes/{barcode_filename}" 
+            code.save(f"static/{barcode_path}")
+            barcode_paths.append(barcode_path)
+
+            # Update the product's barcode in the database
+            update_product_barcode(pid, barcode_filename) 
+        except Exception as e:
+            print(f"Error generating barcode for product with ID {pid}: {str(e)}")
+
+    return {'generate_barcode': generate_barcode}
+
+
+@app.route("/products-barcodes",methods=["GET"])
+@login_required
+def products_barcodes():
+    records = get_data("products")
+    return render_template("products-barcodes.html", products=records )
+
+
 @app.route("/logout")
 def logout():
     session.pop('user_id', None)
     session.pop('user_name', None)
     flash("You have been logged out.")
     return redirect(url_for("login"))
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
