@@ -24,6 +24,7 @@ function createChart() {
   }
   
 var labels = [];
+
 var remainingStock = [];
 
 // Function to fetch data from Flask route
